@@ -245,7 +245,7 @@ class AlternateSqCiRotView(ctx : Context) : View(ctx) {
         fun create(activity : Activity) : AlternateSqCiRotView {
             val view : AlternateSqCiRotView = AlternateSqCiRotView(activity)
             activity.setContentView(view)
-            return view 
+            return view
         }
     }
 }
