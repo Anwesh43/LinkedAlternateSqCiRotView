@@ -87,7 +87,7 @@ class AlternateSqCiRotView(ctx : Context) : View(ctx) {
 
     private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val renderer : Renderer = Renderer(this)
-    
+
     override fun onDraw(canvas : Canvas) {
         renderer.render(canvas, paint)
     }
@@ -238,6 +238,14 @@ class AlternateSqCiRotView(ctx : Context) : View(ctx) {
                 animator.start()
                 cb()
             }
+        }
+    }
+
+    companion object {
+        fun create(activity : Activity) : AlternateSqCiRotView {
+            val view : AlternateSqCiRotView = AlternateSqCiRotView(activity)
+            activity.setContentView(view)
+            return view 
         }
     }
 }
