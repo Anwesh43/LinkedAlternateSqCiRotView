@@ -12,6 +12,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.RectF
 import android.content.Context
+import android.util.Log
+import java.util.*
 
 val nodes : Int = 5
 val shapes : Int = 4
@@ -84,15 +86,18 @@ fun Canvas.drawASCNode(i : Int, scale : Float, paint : Paint) {
 class AlternateSqCiRotView(ctx : Context) : View(ctx) {
 
     private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
-
+    private val renderer : Renderer = Renderer(this)
+    
     override fun onDraw(canvas : Canvas) {
-
+        renderer.render(canvas, paint)
     }
 
     override fun onTouchEvent(event : MotionEvent) : Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap {
+                    Log.d("started", "${Date().time / 1000}")
+                }
             }
         }
         return true
@@ -231,6 +236,7 @@ class AlternateSqCiRotView(ctx : Context) : View(ctx) {
         fun handleTap(cb : () -> Unit) {
             ascr.startUpdating {
                 animator.start()
+                cb()
             }
         }
     }
