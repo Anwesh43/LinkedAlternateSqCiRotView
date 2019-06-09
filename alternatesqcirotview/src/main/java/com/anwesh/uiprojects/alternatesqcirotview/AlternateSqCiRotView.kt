@@ -190,7 +190,7 @@ class AlternateSqCiRotView(ctx : Context) : View(ctx) {
         }
     }
 
-    data class AlternateSqCirRot(var i : Int) {
+    data class AlternateSqCiRot(var i : Int) {
 
         private val root : ASCNode = ASCNode(0)
         private var curr : ASCNode = root
@@ -210,6 +210,28 @@ class AlternateSqCiRotView(ctx : Context) : View(ctx) {
 
         fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
+        }
+    }
+
+    data class Renderer(var view : AlternateSqCiRotView) {
+
+        private val animator : Animator = Animator(view)
+        private val ascr : AlternateSqCiRot = AlternateSqCiRot(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            ascr.draw(canvas, paint)
+            animator.animate {
+                ascr.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap(cb : () -> Unit) {
+            ascr.startUpdating {
+                animator.start()
+            }
         }
     }
 }
