@@ -61,13 +61,16 @@ fun Canvas.drawASCNode(i : Int, scale : Float, paint : Paint) {
     val h : Float = height.toFloat()
     val gap : Float = h / (nodes + 1)
     val size : Float = gap / sizeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
     paint.color = foreColor
     paint.strokeWidth = Math.min(w, h) / strokeFactor
     paint.strokeCap = Paint.Cap.ROUND
     save()
     translate(w / 2, gap * (i + 1))
+    rotate(rotDeg * sc2)
     for (j in 0..(shapes - 1)) {
-        val sc : Float = scale.divideScale(j, shapes)
+        val sc : Float = sc1.divideScale(j, shapes)
         save()
         rotate(90f * j)
         translate(size / 2, size / 2)
@@ -93,5 +96,25 @@ class AlternateSqCiRotView(ctx : Context) : View(ctx) {
             }
         }
         return true
+    }
+
+    data class State(var scale : Float = 0f, var prevScale : Float = 0f, var dir : Float = 0f) {
+
+        fun update(cb : (Float) -> Unit) {
+            scale += scale.updateValue(dir, shapes, 1)
+            if (Math.abs(scale - prevScale) > 1) {
+                scale = prevScale + dir
+                dir = 0f
+                prevScale = scale
+                cb(prevScale)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            if (dir == 0f) {
+                dir = 1f - 2 * prevScale
+                cb()
+            }
+        }
     }
 }
