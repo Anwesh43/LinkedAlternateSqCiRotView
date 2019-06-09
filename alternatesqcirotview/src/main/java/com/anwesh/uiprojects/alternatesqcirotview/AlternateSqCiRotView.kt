@@ -25,7 +25,8 @@ val foreColor : Int = Color.parseColor("#1565C0")
 val backColor : Int = Color.parseColor("#BDBDBD")
 val sweepDeg : Float = 360f
 val rotDeg : Float = 90f
-val shapeSizeFactor : Float = 3f
+val shapeSizeFactor : Float = 2f
+val delay : Long = 25
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -45,7 +46,8 @@ fun Canvas.drawCircleShape(sc : Float, size : Float, paint : Paint) {
 
 fun Canvas.drawSquareShape(sc : Float, size : Float, paint : Paint) {
     save()
-    rotate(sweepDeg * sc)
+    rotate((sweepDeg / 4) * sc)
+    scale(sc, sc)
     drawRect(RectF(-size / 2, -size / 2, size / 2, size / 2), paint)
     restore()
 }
@@ -75,8 +77,8 @@ fun Canvas.drawASCNode(i : Int, scale : Float, paint : Paint) {
         val sc : Float = sc1.divideScale(j, shapes)
         save()
         rotate(90f * j)
-        translate(size / 2, size / 2)
         drawLine(0f, 0f, size, 0f, paint)
+        translate(size / 2, size / 2)
         drawAlternateShape(j, sc, size / shapeSizeFactor, paint)
         restore()
     }
@@ -129,7 +131,7 @@ class AlternateSqCiRotView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(delay)
                     view.invalidate()
                 } catch(ex : Exception) {
 
